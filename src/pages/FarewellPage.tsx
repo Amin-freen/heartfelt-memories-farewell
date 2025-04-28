@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Hero from "@/components/Hero";
 import Envelope from "@/components/Envelope";
 import Poem from "@/components/Poem";
@@ -9,6 +9,8 @@ import Particles from "@/components/Particles";
 import MusicPlayer from "@/components/MusicPlayer";
 import { ArrowDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import LastClassImage from "@/components/LastClassImage";
+import EmotionalSection from "@/components/EmotionalSection";
 
 const FarewellPage: React.FC = () => {
   const [showArrow, setShowArrow] = useState(true);
@@ -103,8 +105,16 @@ const FarewellPage: React.FC = () => {
         </AnimatePresence>
       </section>
       
+      <section id="last-class" className="min-h-screen">
+        <LastClassImage />
+      </section>
+
       <section id="message" className="py-20 px-6 md:px-10 min-h-screen flex items-center justify-center">
         <Envelope />
+      </section>
+      
+      <section id="emotional" className="min-h-screen py-20 px-6 md:px-10">
+        <EmotionalSection />
       </section>
       
       <section id="poem" className="py-20 px-6 md:px-10 min-h-screen flex items-center justify-center bg-dark-charcoal">

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -7,15 +6,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
+import { motion } from 'framer-motion';
+import { Gallery, Video } from 'lucide-react';
 
-const images = [
+interface MediaItem {
+  type: 'image' | 'video';
+  src: string;
+  caption: string;
+}
+
+const mediaItems: MediaItem[] = [
   {
     src: 'public/lovable-uploads/0436f1a2-579b-46f4-8ad1-c787ed03a807.png',
     caption: 'Class of CSE-A - Together we made memories that will last a lifetime'
@@ -71,40 +71,61 @@ const images = [
   {
     src: 'public/lovable-uploads/f2862979-399c-4a38-ba69-775ab5d65da6.png',
     caption: 'CSE-A gang - The laughter we shared will echo forever'
+  },
+  {
+    type: 'video',
+    src: 'path_to_your_video.mp4',
+    caption: 'Fun memories from our last day'
   }
 ];
 
 const PhotoGallery: React.FC = () => {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = (index: number) => {
-    setSelectedImage(index);
+  const openModal = (item: MediaItem) => {
+    setSelectedItem(item);
     setIsModalOpen(true);
   };
 
   return (
     <div className="max-w-7xl mx-auto">
-      <h2 className="text-3xl md:text-4xl font-serif text-center mb-10 text-glow">Memories We Shared</h2>
+      <motion.h2 
+        className="text-3xl md:text-4xl font-serif text-center mb-10 text-glow"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        Our Memories Together
+      </motion.h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {images.map((image, index) => (
-          <div 
+        {mediaItems.map((item, index) => (
+          <motion.div 
             key={index}
             className="aspect-square overflow-hidden rounded-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg group relative"
-            onClick={() => openModal(index)}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            onClick={() => openModal(item)}
           >
-            <img 
-              src={image.src} 
-              alt={`Memory ${index + 1}`} 
-              className="w-full h-full object-cover object-center"
-            />
+            {item.type === 'image' ? (
+              <img 
+                src={item.src} 
+                alt={`Memory ${index + 1}`} 
+                className="w-full h-full object-cover object-center"
+              />
+            ) : (
+              <div className="relative w-full h-full bg-dark-charcoal flex items-center justify-center">
+                <Video className="w-12 h-12 text-white/70" />
+              </div>
+            )}
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-end">
               <div className="p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-white text-sm truncate">{image.caption}</p>
+                <p className="text-white text-sm truncate">{item.caption}</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -113,41 +134,25 @@ const PhotoGallery: React.FC = () => {
           <DialogHeader>
             <DialogTitle className="text-highlight-pink">Memory</DialogTitle>
             <DialogDescription>
-              {selectedImage !== null && (
-                <p className="text-white/80">{images[selectedImage].caption}</p>
-              )}
+              {selectedItem?.caption}
             </DialogDescription>
           </DialogHeader>
           
-          {selectedImage !== null && (
-            <Carousel className="w-full">
-              <CarouselContent>
-                {images.map((image, index) => (
-                  <CarouselItem key={index} className={selectedImage === index ? 'block' : 'hidden'}>
-                    <div className="flex items-center justify-center">
-                      <img 
-                        src={image.src} 
-                        alt={`Memory ${index + 1}`}
-                        className="max-h-[60vh] max-w-full object-contain"
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedImage(prev => prev === 0 ? images.length - 1 : (prev as number) - 1);
-                }}
+          <div className="flex items-center justify-center max-h-[70vh]">
+            {selectedItem?.type === 'image' ? (
+              <img 
+                src={selectedItem.src}
+                alt="Selected memory"
+                className="max-h-full max-w-full object-contain"
               />
-              <CarouselNext 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedImage(prev => prev === images.length - 1 ? 0 : (prev as number) + 1);
-                }}
+            ) : (
+              <video 
+                src={selectedItem?.src}
+                controls
+                className="max-h-full max-w-full"
               />
-            </Carousel>
-          )}
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>
