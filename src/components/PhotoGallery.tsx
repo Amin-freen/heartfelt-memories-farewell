@@ -1,14 +1,9 @@
 
-import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import React, { useState, useEffect } from 'react';
+import MediaViewer from './MediaViewer';
 import { motion } from 'framer-motion';
 import { Image, Video } from 'lucide-react';
+import MediaItem from './MediaItem';
 
 interface MediaItem {
   type: 'image' | 'video';
@@ -16,97 +11,120 @@ interface MediaItem {
   caption: string;
 }
 
-const mediaItems: MediaItem[] = [
+const allMediaItems: MediaItem[] = [
+  // Add your own images and videos here!
+  // 1. Place your files in the `public/lovable-uploads` folder.
+  // 2. Add a new object below for each file, like this example:
+  /*
   {
-    type: 'image',
-    src: 'public/lovable-uploads/0436f1a2-579b-46f4-8ad1-c787ed03a807.png',
-    caption: 'Class of CSE-A - Together we made memories that will last a lifetime'
+    type: 'image', // or 'video'
+    src: '/lovable-uploads/your-image-filename.jpg', // Make sure the path starts with /lovable-uploads/
+    caption: 'Your descriptive caption here'
   },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/4a480831-4938-4686-9f2e-379ac37b323a.png',
-    caption: 'Our last class day - The beginning of a new chapter'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/4b15ffa6-3d89-419d-bdd8-f1f9e65e0f72.png',
-    caption: 'Friday memories - The small moments that brought us together'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/6ffacf86-0390-4565-8235-7b9638a41dc0.png',
-    caption: 'Sunshine and smiles - Friends who made every day brighter'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/948d3024-8061-4d70-b9a7-123d8c9a5da4.png',
-    caption: 'Girl squad that got me through everything'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/ab24688f-33a1-4768-95b2-e43a2b40e907.png',
-    caption: 'Friday vibes - Moments of joy between classes'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/8350ebb3-3136-4b89-b6f2-27589cb6bdc7.png',
-    caption: 'Under the shade - Where conversations flowed and friendships grew'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/191921eb-876c-4f19-923e-318be81e8096.png',
-    caption: 'Friends who became family - The perfect team'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/982d2d88-3f85-497a-9988-336733f520fe.png',
-    caption: 'The wedding celebration - Days spent well with friends'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/9c466272-e2b2-497b-a458-0e6d1d87cdf2.png',
-    caption: 'Engineering squad - Together we conquered it all'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/9955a582-e4d1-448e-87cb-4adfd54ff59c.png',
-    caption: 'The after-class gatherings - Where memories were made'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/0ef15bb7-f37f-416f-a698-71d06ba3b840.png',
-    caption: 'Our college ID cards - The start of our journey'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/a3219834-966b-48b0-8637-f093771f2f22.png',
-    caption: 'Winter adventure - Exploring new places together'
-  },
-  {
-    type: 'image',
-    src: 'public/lovable-uploads/f2862979-399c-4a38-ba69-775ab5d65da6.png',
-    caption: 'CSE-A gang - The laughter we shared will echo forever'
-  },
-  {
-    type: 'video',
-    src: 'path_to_your_video_1.mp4',
-    caption: 'Fun memories from our last day'
-  },
-  {
-    type: 'video',
-    src: 'path_to_your_video_2.mp4',
-    caption: 'Dance practice sessions 💃'
-  },
-  {
-    type: 'video',
-    src: 'path_to_your_video_3.mp4',
-    caption: 'Cultural fest performances 🎭'
-  }
+  */
+  { type: 'image', src: '/lovable-uploads/62c07d66-ce05-4a49-b709-cff542eb5c4d.JPG', caption: 'Candid moments - Capturing genuine smiles' },
+  { type: 'image', src: '/lovable-uploads/72586672-6b60-466a-b2d1-c032c86609bd.png', caption: 'Digital art - Creative expressions of our friendship' },
+  { type: 'image', src: '/lovable-uploads/IMG_3284.JPG', caption: 'Special moments captured during our college days' },
+  { type: 'image', src: '/lovable-uploads/IMG_5027.JPG', caption: 'Unforgettable memories with amazing friends' },
+  { type: 'image', src: '/lovable-uploads/IMG_5029.JPG', caption: 'Celebrating our achievements together' },
+  { type: 'image', src: '/lovable-uploads/IMG_5037.JPG', caption: 'The bonds we formed will last forever' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 1.29.06 PM.jpeg', caption: 'Class of CSE-A - Together we made memories that will last a lifetime' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 1.29.07 PM.jpeg', caption: 'Our last class day - The beginning of a new chapter' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 1.29.17 PM.jpeg', caption: 'Friday memories - The small moments that brought us together' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 1.30.43 PM.jpeg', caption: 'Sunshine and smiles - Friends who made every day brighter' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.03 PM.jpeg', caption: 'Girl squad that got me through everything' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.04 PM (1).jpeg', caption: 'Under the shade - Where conversations flowed and friendships grew' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.04 PM (2).jpeg', caption: 'Friends who became family - The perfect team' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.04 PM.jpeg', caption: 'Friday vibes - Moments of joy between classes' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.05 PM (1).jpeg', caption: 'Engineering squad - Together we conquered it all' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.05 PM.jpeg', caption: 'The wedding celebration - Days spent well with friends' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.12 PM.jpeg', caption: 'The after-class gatherings - Where memories were made' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.16 PM.jpeg', caption: 'Our college ID cards - The start of our journey' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.32 PM.jpeg', caption: 'Winter adventure - Exploring new places together' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.09.38 PM.jpeg', caption: 'CSE-A gang - The laughter we shared will echo forever' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.17 PM.jpeg', caption: 'Campus adventures - Creating memories in every corner' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.18 PM (1).jpeg', caption: 'Classroom shenanigans - Where education met entertainment' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.18 PM (2).jpeg', caption: 'Project partners - Turning challenges into triumphs' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.18 PM.jpeg', caption: 'Study buddies - The ones who made learning fun' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.19 PM (1).jpeg', caption: 'Lab partners - Experimenting with friendship and science' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.19 PM.jpeg', caption: 'Coffee breaks - Where the best conversations happened' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.20 PM (2).jpeg', caption: 'Celebration time - Marking milestones together' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.20 PM.jpeg', caption: 'Weekend hangouts - Making the most of our college years' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.23 PM (1).jpeg', caption: 'Campus walks - The paths we traveled together' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.23 PM (2).jpeg', caption: 'Lunch breaks - Sharing food and stories' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.23 PM.jpeg', caption: 'Library sessions - Where knowledge and friendship grew' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.10.25 PM.jpeg', caption: 'Exam season - Supporting each other through stress' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 2.19.02 PM.jpeg', caption: 'Graduation day - The culmination of our journey' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 3.51.24 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.00.32 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.00.38 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.00.44 PM (1).jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.00.44 PM (2).jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.00.44 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.00.45 PM (1).jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.00.45 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.03.18 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.03.41 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.04.01 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.04.18 PM.jpeg', caption: 'Add caption' },
+  { type: 'image', src: '/lovable-uploads/WhatsApp Image 2025-04-28 at 4.05.39 PM.jpeg', caption: 'Add caption' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.12 PM.mp4', caption: 'Fun memories from our last day' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.16 PM.mp4', caption: 'Dance practice sessions 💃' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.21 PM.mp4', caption: 'Cultural fest performances 🎭' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.26 PM.mp4', caption: 'Classroom fun - Learning with laughter' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.31 PM.mp4', caption: 'Birthday celebrations in class 🎂' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.38 PM.mp4', caption: 'Group project presentations 📊' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.43 PM.mp4', caption: 'Campus tour with friends 🏫' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.44 PM (1).mp4', caption: 'Talent show performances - Hidden skills revealed' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.44 PM.mp4', caption: 'Impromptu dance sessions in the corridor' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.52 PM.mp4', caption: 'Lab experiment success celebrations 🧪' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.09.54 PM.mp4', caption: 'Weekend trip adventures 🚗' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.02 PM.mp4', caption: 'Singing sessions during breaks 🎵' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.05 PM.mp4', caption: 'Sports day competitions 🏆' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.16 PM.mp4', caption: 'Farewell party preparations 🎊' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.17 PM.mp4', caption: 'Surprise birthday celebration 🎉' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.25 PM.mp4', caption: 'Graduation day excitement 🎓' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.29 PM.mp4', caption: 'Last day emotional moments 💕' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.33 PM.mp4', caption: 'Group study sessions before exams 📚' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.37 PM.mp4', caption: 'College festival highlights 🎪' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.10.47 PM.mp4', caption: 'Classroom debates and discussions 💬' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.11.14 PM.mp4', caption: 'Farewell speech moments 🎤' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.11.59 PM.mp4', caption: 'Last day campus tour 🏫' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.12.00 PM.mp4', caption: 'Group photo sessions 📸' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 2.12.06 PM.mp4', caption: 'Final goodbyes and promises to stay in touch ❤️' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 4.00.38 PM.mp4', caption: 'Add caption' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 4.00.43 PM.mp4', caption: 'Add caption' },
+  { type: 'video', src: '/lovable-uploads/WhatsApp Video 2025-04-28 at 4.07.30 PM.mp4', caption: 'Add caption' }
 ];
+
+// Fisher-Yates (aka Knuth) Shuffle function
+const shuffleArray = <T,>(array: T[]): T[] => {
+  let currentIndex = array.length, randomIndex;
+  const newArray = [...array]; // Create a copy to avoid mutating the original
+
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [newArray[currentIndex], newArray[randomIndex]] = [
+      newArray[randomIndex], newArray[currentIndex]];
+  }
+
+  return newArray;
+};
 
 const PhotoGallery: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [shuffledItems, setShuffledItems] = useState<MediaItem[]>([]);
+
+  useEffect(() => {
+    setShuffledItems(shuffleArray(allMediaItems));
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const openModal = (item: MediaItem) => {
     setSelectedItem(item);
@@ -123,63 +141,31 @@ const PhotoGallery: React.FC = () => {
       >
         Our Memories Together
       </motion.h2>
+      {/* Main heading removed as requested */}
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {mediaItems.map((item, index) => (
+        {shuffledItems.map((item, index) => (
           <motion.div 
             key={index}
-            className="aspect-square overflow-hidden rounded-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg group relative"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            onClick={() => openModal(item)}
           >
-            {item.type === 'image' ? (
-              <img 
-                src={item.src} 
-                alt={`Memory ${index + 1}`} 
-                className="w-full h-full object-cover object-center"
-              />
-            ) : (
-              <div className="relative w-full h-full bg-dark-charcoal flex items-center justify-center">
-                <Video className="w-12 h-12 text-white/70" />
-              </div>
-            )}
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-end">
-              <div className="p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-white text-sm truncate">{item.caption}</p>
-              </div>
-            </div>
+            <MediaItem 
+              type={item.type}
+              src={item.src}
+              caption={item.caption}
+              onClick={() => openModal(item)}
+            />
           </motion.div>
         ))}
       </div>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] bg-dark-primary border-highlight-purple/30">
-          <DialogHeader>
-            <DialogTitle className="text-highlight-pink">Memory</DialogTitle>
-            <DialogDescription>
-              {selectedItem?.caption}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="flex items-center justify-center max-h-[70vh]">
-            {selectedItem?.type === 'image' ? (
-              <img 
-                src={selectedItem.src}
-                alt="Selected memory"
-                className="max-h-full max-w-full object-contain"
-              />
-            ) : (
-              <video 
-                src={selectedItem?.src}
-                controls
-                className="max-h-full max-w-full"
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <MediaViewer 
+        isOpen={isModalOpen} 
+        onClose={setIsModalOpen} 
+        item={selectedItem} 
+      />
     </div>
   );
 };

@@ -21,8 +21,39 @@ const memories = [
     emoji: "💝"
   },
   {
-    text: "Dancing in the rain after final exams! 🌧️",
+    text: "Dancing in culturals, womens day and much more!!!! ",
     emoji: "💃"
+  },{
+    text: "Last minute kenjifying for LIL Marks ",
+    emoji: "📑"
+  },
+  {
+    text: "Synsara'24 ",
+    emoji: "🤍"
+  },
+  {
+    text: "Winning the cricket match'25 ",
+    emoji: "🏆"
+  },{
+    text: "Those unnecessary NPTEL exams!",
+    emoji: "🗑️"
+  },{
+    text: "Looking for Lab coats🥺",
+    emoji: "🧥"
+  },
+  {
+    text: "Sheela mam's 'neenga laa en pullainga da'",
+    emoji: "👵🏻"
+  },{
+    text: "IV to pondiiiiiiiiii",
+    emoji: "🏖️"
+  },
+  {
+    text: "Bunking class to go to canteen",
+    emoji: "😋"
+  },{
+    text: "From drawing cones and shapes in eg to attending college just for attendance",
+    emoji: "✏️"
   }
 ];
 
