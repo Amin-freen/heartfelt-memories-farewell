@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -7,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { motion } from 'framer-motion';
-import { Gallery, Video } from 'lucide-react';
+import { Image, Video } from 'lucide-react';
 
 interface MediaItem {
   type: 'image' | 'video';
@@ -17,58 +18,72 @@ interface MediaItem {
 
 const mediaItems: MediaItem[] = [
   {
+    type: 'image',
     src: 'public/lovable-uploads/0436f1a2-579b-46f4-8ad1-c787ed03a807.png',
     caption: 'Class of CSE-A - Together we made memories that will last a lifetime'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/4a480831-4938-4686-9f2e-379ac37b323a.png',
     caption: 'Our last class day - The beginning of a new chapter'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/4b15ffa6-3d89-419d-bdd8-f1f9e65e0f72.png',
     caption: 'Friday memories - The small moments that brought us together'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/6ffacf86-0390-4565-8235-7b9638a41dc0.png',
     caption: 'Sunshine and smiles - Friends who made every day brighter'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/948d3024-8061-4d70-b9a7-123d8c9a5da4.png',
     caption: 'Girl squad that got me through everything'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/ab24688f-33a1-4768-95b2-e43a2b40e907.png',
     caption: 'Friday vibes - Moments of joy between classes'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/8350ebb3-3136-4b89-b6f2-27589cb6bdc7.png',
     caption: 'Under the shade - Where conversations flowed and friendships grew'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/191921eb-876c-4f19-923e-318be81e8096.png',
     caption: 'Friends who became family - The perfect team'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/982d2d88-3f85-497a-9988-336733f520fe.png',
     caption: 'The wedding celebration - Days spent well with friends'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/9c466272-e2b2-497b-a458-0e6d1d87cdf2.png',
     caption: 'Engineering squad - Together we conquered it all'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/9955a582-e4d1-448e-87cb-4adfd54ff59c.png',
     caption: 'The after-class gatherings - Where memories were made'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/0ef15bb7-f37f-416f-a698-71d06ba3b840.png',
     caption: 'Our college ID cards - The start of our journey'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/a3219834-966b-48b0-8637-f093771f2f22.png',
     caption: 'Winter adventure - Exploring new places together'
   },
   {
+    type: 'image',
     src: 'public/lovable-uploads/f2862979-399c-4a38-ba69-775ab5d65da6.png',
     caption: 'CSE-A gang - The laughter we shared will echo forever'
   },
