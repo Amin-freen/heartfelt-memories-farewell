@@ -33,7 +33,7 @@ const MusicPlayer: React.FC = () => {
         ref={audioRef}
         loop
         preload="auto"
-        src="https://cdn.pixabay.com/audio/2022/03/15/audio_c9a4a1a97b.mp3"
+        src="https://pixabay.com/music/electronic-maroon-5-pop-x-positive-x-chill-mysterious-light-292120/"
       />
       
       <Button 

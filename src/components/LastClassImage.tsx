@@ -12,7 +12,7 @@ const LastClassImage = () => {
     >
       <div className="absolute inset-0 bg-black/50 z-10" />
       <img 
-        src="public/lovable-uploads/72586672-6b60-466a-b2d1-c032c86609bd.png"
+        src="/lovable-uploads/72586672-6b60-466a-b2d1-c032c86609bd.png"
         alt="Last Class Together"
         className="w-full h-full object-cover"
       />
