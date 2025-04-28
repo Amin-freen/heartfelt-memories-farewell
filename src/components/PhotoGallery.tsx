@@ -89,8 +89,18 @@ const mediaItems: MediaItem[] = [
   },
   {
     type: 'video',
-    src: 'path_to_your_video.mp4',
+    src: 'path_to_your_video_1.mp4',
     caption: 'Fun memories from our last day'
+  },
+  {
+    type: 'video',
+    src: 'path_to_your_video_2.mp4',
+    caption: 'Dance practice sessions 💃'
+  },
+  {
+    type: 'video',
+    src: 'path_to_your_video_3.mp4',
+    caption: 'Cultural fest performances 🎭'
   }
 ];
 

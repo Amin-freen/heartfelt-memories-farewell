@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Hero from "@/components/Hero";
 import Envelope from "@/components/Envelope";
@@ -11,6 +10,7 @@ import { ArrowDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LastClassImage from "@/components/LastClassImage";
 import EmotionalSection from "@/components/EmotionalSection";
+import MemoryWall from "@/components/MemoryWall";
 
 const FarewellPage: React.FC = () => {
   const [showArrow, setShowArrow] = useState(true);
@@ -123,6 +123,10 @@ const FarewellPage: React.FC = () => {
       
       <section id="gallery" className="py-20 px-6 md:px-10">
         <PhotoGallery />
+      </section>
+      
+      <section id="memory-wall" className="min-h-screen">
+        <MemoryWall />
       </section>
       
       <Footer />
