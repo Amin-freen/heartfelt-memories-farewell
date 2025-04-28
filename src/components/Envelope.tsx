@@ -1,32 +1,94 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Envelope: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const envelopeRef = useRef<HTMLDivElement>(null);
 
   const handleOpen = () => {
     setIsOpen(true);
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (envelopeRef.current) {
+      observer.observe(envelopeRef.current);
+    }
+
+    return () => {
+      if (envelopeRef.current) {
+        observer.unobserve(envelopeRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <h2 className="text-3xl md:text-4xl font-serif text-center mb-10 text-glow">A Letter to Remember</h2>
+    <div className="max-w-4xl mx-auto" ref={envelopeRef}>
+      <motion.h2 
+        className="text-3xl md:text-4xl font-serif text-center mb-10 text-glow"
+        initial={{ opacity: 0, y: 20 }}
+        animate={isVisible ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8 }}
+      >
+        A Letter to Remember
+      </motion.h2>
       
-      <div className={`envelope ${isOpen ? 'open' : ''} bg-gradient-to-br from-[#7e2134] to-[#431220] rounded-md p-4 mx-auto max-w-2xl relative subtle-glow`}>
+      <motion.div 
+        className={`envelope ${isOpen ? 'open' : ''} bg-gradient-to-br from-[#7e2134] to-[#431220] rounded-md p-4 mx-auto max-w-2xl relative subtle-glow cursor-pointer`}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+        whileHover={!isOpen ? { scale: 1.02 } : {}}
+        transition={{ duration: 0.5 }}
+        onClick={!isOpen ? handleOpen : undefined}
+      >
         {!isOpen ? (
-          <Button 
-            onClick={handleOpen}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-highlight-peach text-dark-primary hover:bg-highlight-peach/90"
+          <motion.div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            Open Letter
-          </Button>
+            <Button 
+              className="bg-highlight-peach text-dark-primary hover:bg-highlight-peach/90 shadow-lg"
+            >
+              Open Letter
+            </Button>
+            <p className="text-white/70 mt-2 text-sm">Click to read</p>
+          </motion.div>
         ) : null}
         
-        <div className="envelope-lid absolute top-0 left-0 right-0 h-24 bg-gradient-to-br from-[#a02c45] to-[#591a2b] z-10 rounded-t-md"></div>
+        <motion.div 
+          className="envelope-lid absolute top-0 left-0 right-0 h-24 bg-gradient-to-br from-[#a02c45] to-[#591a2b] z-10 rounded-t-md"
+          animate={isOpen ? { rotateX: '-180deg' } : {}}
+          style={{ transformOrigin: 'top' }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        ></motion.div>
         
-        <div className="envelope-content mt-6 p-6 bg-[#f5e7d3] text-dark-primary rounded-md">
-          <div className="max-h-[60vh] overflow-y-auto p-4">
+        <motion.div 
+          className="envelope-content mt-6 p-6 bg-[#f5e7d3] text-dark-primary rounded-md"
+          initial={{ opacity: 0, height: 0 }}
+          animate={isOpen ? { opacity: 1, height: 'auto' } : {}}
+          transition={{ delay: 0.5, duration: 1 }}
+        >
+          <motion.div 
+            className="max-h-[60vh] overflow-y-auto p-4"
+            initial={{ opacity: 0 }}
+            animate={isOpen ? { opacity: 1 } : {}}
+            transition={{ delay: 1, duration: 0.8 }}
+          >
             <p className="font-handwritten text-xl mb-4 leading-relaxed">
               I don't even know how to begin — because how do you say goodbye to a place, to people, who became your whole world without you even realizing it?
             </p>
@@ -127,12 +189,17 @@ const Envelope: React.FC = () => {
               Goodbye... until we meet again. ❤️
             </p>
             
-            <p className="font-handwritten text-2xl text-right mt-8">
+            <motion.p 
+              className="font-handwritten text-2xl text-right mt-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
+            >
               Forever yours,<br />Amin
-            </p>
-          </div>
-        </div>
-      </div>
+            </motion.p>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
